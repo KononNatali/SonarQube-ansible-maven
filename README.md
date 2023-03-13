@@ -7,7 +7,7 @@
 **2.** Clone your fork locally.
 
 ```
-$ git clone https://github.com/shanemacbride/spring-petclinic.git 
+$ git clone https://github.com/KononNatali/spring-petclinic-jenkins.git
 $ cd spring-petclinic
 ```
 **3.** Start up Docker. Our Jenkins container will make use of it. Use [Liatrio’s Alpine-Jenkins image](https://github.com/liatrio/alpine-jenkins), which is specifically configured for using Docker in pipelines. 
