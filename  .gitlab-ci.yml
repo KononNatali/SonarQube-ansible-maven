@@ -1,0 +1,20 @@
+include: https://gitlab.com/NataliK/spring-petclinic-jenkins/raw/main/common.yml
+
+Shields4J:
+  extends: .build_pet-clinic
+
+Pet-clinic doc:
+  extends: .build_pet-clinic_doc
+  variables:
+    DOCKERFILE: .docs/Dockerfile
+
+Sonar review:
+  extends: .sonar_review
+  dependencies:
+    - Shields4J
+
+Release:
+  extends: .trigger_release_deploy
+
+Snapshot:
+  extends: .trigger_snapshot_deploy

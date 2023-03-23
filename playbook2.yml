@@ -1,0 +1,26 @@
+---
+- hosts: all
+  become: true
+  gather_facts: false
+  tasks:
+  #clone repo from github "Spring PetClinic Sample Application"
+  - name: Clone a repository from github Spring PetClinic
+    git:
+     repo: https://github.com/g0t4/jgsu-spring-petclinic.git
+     dest: /app
+     clone: yes
+  #clone repo from github "The Converter App"
+  - name: Clone a repository from github The Converter
+    git:
+     repo: https://github.com/KononNatali/converter.git
+     dest: /app
+     clone: yes
+
+  - name: Register runner for a specific project
+  community.general.gitlab_runner:
+    api_url: https://gitlab.example.com/
+    api_token: "{{ access_token }}"
+    registration_token: 4gfdsg345
+    description: MyProject runner
+    state: present
+    project: mygroup/mysubgroup/myproject

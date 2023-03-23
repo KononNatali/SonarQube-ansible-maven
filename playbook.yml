@@ -1,0 +1,69 @@
+---
+- hosts: all
+  become: true
+  gather_facts: false
+
+  tasks:
+  # Install dependencies
+  - name: Install dependencies
+    apt:
+      name:
+        - apt-transport-https 
+        - ca-certificates 
+        - curl 
+        - gnupg-agent 
+        - software-properties-common
+        - build-essential
+        - python3-pip
+      state: present
+      update-cache: yes
+
+  - name: Add docker repo
+    apt_repository:
+      repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
+      state: present
+      update_cache: yes
+  
+  - name: Add gitlab-runner user to docker group
+    user:
+       name: gitlab-runner
+       append: yes
+       groups: docker
+
+  # Download and install the Docker GPG key
+  - name: Download Docker GPG key
+    get_url:
+      url: https://download.docker.com/linux/ubuntu/gpg
+      dest: /tmp/docker.gpg
+
+  - name: Install Docker GPG key
+    shell: apt-key add /tmp/docker.gpg
+  
+  - name: Update apt cache
+    apt:
+      update_cache: yes
+
+    # Add the GitLab Runner package repository
+  - name: Add GitLab Runner package repository
+    apt_key:
+      url: https://packages.gitlab.com/gpg.key
+      state: present
+
+  - name: Add GitLab Runner package repository to sources.list
+    apt_repository:
+      repo: 'deb https://packages.gitlab.com/runner/gitlab-runner/ubuntu/ xenial main'
+      state: present
+      filename: gitlab-runner
+      update_cache: yes
+
+    # Add the GitLab Runner GPG key
+  - name: Add GitLab Runner GPG key
+    apt_key:
+      url: 'https://packages.gitlab.com/runner/gitlab-runner/gpgkey'
+      state: present
+
+    # Install GitLab Runner
+  - name: Install GitLab Runner
+    apt:
+     name: gitlab-runner
+     state: present
